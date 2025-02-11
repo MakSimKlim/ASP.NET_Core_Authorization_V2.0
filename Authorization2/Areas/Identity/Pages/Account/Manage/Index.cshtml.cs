@@ -82,6 +82,11 @@ namespace Authorization2.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+            // Обработка полей, которые могут быть NULL
+            var firstName = user.FirstName ?? "Not provided";
+            var lastName = user.LastName ?? "Not provided";
+            var profilePicture = user.ProfilePicture ?? new byte[0]; // если поле пустое, задаем пустое изображение
+
             await LoadAsync(user);
             return Page();
         }
