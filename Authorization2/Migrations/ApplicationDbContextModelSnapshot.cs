@@ -74,7 +74,7 @@ namespace Authorization2.Migrations
                         .HasColumnType("bit");
 
                     b.Property<byte[]>("ProfilePicture")
-                        .IsRequired()
+                        //.IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("SecurityStamp")
