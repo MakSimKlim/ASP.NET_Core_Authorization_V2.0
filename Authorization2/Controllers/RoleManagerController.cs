@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Authorization2.Controllers
 {
+    [Authorize(Roles = "SuperAdmin")] // Attribute restricting access to "RoleManager" for all users except SuperAdmin
     public class RoleManagerController : Controller
     {
         private readonly RoleManager<IdentityRole> _roleManager;

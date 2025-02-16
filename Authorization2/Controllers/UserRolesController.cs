@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Authorization2.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Authorization2.Controllers
 {
+    [Authorize(Roles = "SuperAdmin")] // Attribute restricting access to "UserRoles" for all users except SuperAdmin
     public class UserRolesController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -35,7 +37,6 @@ namespace Authorization2.Controllers
             }
             return View(userRolesViewModel);
         }
-
         public async Task<IActionResult> Manage(string userId)
         {
             ViewBag.userId = userId;
@@ -54,7 +55,7 @@ namespace Authorization2.Controllers
                     RoleId = role.Id,
                     RoleName = role.Name
                 };
-                if (await _userManager.IsInRoleAsync(user, role.Name))
+                if (await _userManager.IsInRoleAsync(user, role.Name!))
                 {
                     userRolesViewModel.Selected = true;
                 }
@@ -81,7 +82,7 @@ namespace Authorization2.Controllers
                 ModelState.AddModelError("", "Cannot remove user existing roles");
                 return View(model);
             }
-            result = await _userManager.AddToRolesAsync(user, model.Where(x => x.Selected).Select(y => y.RoleName));
+            result = await _userManager.AddToRolesAsync(user, model.Where(x => x.Selected == true).Select(y => y.RoleName));
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "Cannot add selected roles to user");
