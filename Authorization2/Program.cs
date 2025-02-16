@@ -23,7 +23,7 @@ var app = builder.Build();
 
 //***********************************************************
 
-// Вставляем код для инициализации (seed) данных БД:
+//We insert the code to initialize (seed) the database data (*Вставляем код для инициализации (seed) данных БД*):
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -34,6 +34,9 @@ using (var scope = app.Services.CreateScope())
         var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         await ContextSeed.SeedRolesAsync(userManager, roleManager);
+
+        //Method connection to add superadmin user to database
+        await ContextSeed.SeedSuperAdminAsync(userManager, roleManager);
     }
     catch (Exception ex)
     {
