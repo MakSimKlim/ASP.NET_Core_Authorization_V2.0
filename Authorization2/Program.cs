@@ -21,6 +21,29 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
+//***********************************************************
+
+// Вставляем код для инициализации (seed) данных БД:
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+    try
+    {
+        var context = services.GetRequiredService<ApplicationDbContext>();
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        await ContextSeed.SeedRolesAsync(userManager, roleManager);
+    }
+    catch (Exception ex)
+    {
+        var logger = loggerFactory.CreateLogger("Program");
+        logger.LogError(ex, "An error occurred seeding the DB.");
+    }
+}
+
+//***********************************************************
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
